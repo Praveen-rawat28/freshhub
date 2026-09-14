@@ -179,7 +179,51 @@ const INITIAL_ORDERS = [
   }
 ];
 
+const DEFAULT_USER = {
+  id: 'user-praveen',
+  name: 'Praveen Rawat',
+  phone: '+91 98990 12345',
+  email: 'praveen.rawat@freshhub.in',
+  address: 'Tower B, Flat 1204, Central Park · Sector 43, Gurugram',
+  avatar: 'PR'
+};
+
 export function AppProvider({ children }) {
+  // Theme: 'dark' | 'light'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('freshhub_theme') || 'dark';
+  });
+
+  // Customer User Auth
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('freshhub_user');
+    if (saved === 'null') return null;
+    return saved ? JSON.parse(saved) : DEFAULT_USER;
+  });
+
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Apply theme to document root
+  useEffect(() => {
+    localStorage.setItem('freshhub_theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const loginUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem('freshhub_user', JSON.stringify(userData));
+    setIsAuthModalOpen(false);
+  };
+
+  const logoutUser = () => {
+    setUser(null);
+    localStorage.setItem('freshhub_user', 'null');
+  };
+
   // Products
   const [products] = useState(() => {
     const saved = localStorage.getItem('freshhub_products');
@@ -458,6 +502,13 @@ export function AppProvider({ children }) {
         completeOrderAsRider,
         registerRider,
         cashoutRiderBalance,
+        theme,
+        toggleTheme,
+        user,
+        loginUser,
+        logoutUser,
+        isAuthModalOpen,
+        setIsAuthModalOpen,
         toastMsg,
         showToast
       }}

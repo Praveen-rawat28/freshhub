@@ -3,6 +3,7 @@ import { useApp } from './context/AppContext';
 import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
 import CartDrawer from './components/CartDrawer';
+import AuthModal from './components/AuthModal';
 import Storefront from './pages/Storefront';
 import TrackOrder from './pages/TrackOrder';
 import WarehouseOps from './pages/WarehouseOps';
@@ -12,7 +13,7 @@ import { CheckCircle } from 'lucide-react';
 export default function App() {
   const [currentView, setCurrentView] = useState('store'); // 'store' | 'track' | 'ops' | 'rider'
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { toastMsg } = useApp();
+  const { toastMsg, isAuthModalOpen, setIsAuthModalOpen } = useApp();
 
   return (
     <div className="app-container">
@@ -44,6 +45,12 @@ export default function App() {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         onOrderPlaced={() => setCurrentView('track')}
+      />
+
+      {/* Customer Auth / Logout Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
       />
 
       {/* Mobile Bottom Navigation */}

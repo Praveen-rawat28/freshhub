@@ -4,60 +4,56 @@ import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
 import CartDrawer from './components/CartDrawer';
 import AuthModal from './components/AuthModal';
-import Storefront from './pages/Storefront';
-import TrackOrder from './pages/TrackOrder';
-import WarehouseOps from './pages/WarehouseOps';
-import RiderPortal from './pages/RiderPortal';
+import RoleSwitcher from './components/RoleSwitcher';
+import CustomerPanel from './panels/CustomerPanel';
+import RiderPanel from './panels/RiderPanel';
+import StaffPanel from './panels/StaffPanel';
+import AdminPanel from './panels/AdminPanel';
 import { CheckCircle } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('store'); // 'store' | 'track' | 'ops' | 'rider'
+  const { currentRole, toastMsg, isAuthModalOpen, setIsAuthModalOpen } = useApp();
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { toastMsg, isAuthModalOpen, setIsAuthModalOpen } = useApp();
 
   return (
     <div className="app-container">
-      {/* Top App Header */}
-      <Navbar
-        currentView={currentView}
-        setCurrentView={setCurrentView}
-        setIsCartOpen={setIsCartOpen}
-      />
+      {/* Top App Header with Role Context */}
+      <Navbar setIsCartOpen={setIsCartOpen} />
 
-      {/* Main Screen Views */}
+      {/* Main Panel View based on Authorization Role */}
       <main style={{ flex: 1 }}>
-        {currentView === 'store' && (
-          <Storefront onNavigateToTrack={() => setCurrentView('track')} />
+        {currentRole === 'customer' && (
+          <CustomerPanel onOpenCart={() => setIsCartOpen(true)} />
         )}
-        {currentView === 'track' && (
-          <TrackOrder onOpenRiderPortal={() => setCurrentView('rider')} />
+        {currentRole === 'rider' && (
+          <RiderPanel />
         )}
-        {currentView === 'ops' && (
-          <WarehouseOps onOpenRiderPortal={() => setCurrentView('rider')} />
+        {currentRole === 'staff' && (
+          <StaffPanel />
         )}
-        {currentView === 'rider' && (
-          <RiderPortal />
+        {currentRole === 'admin' && (
+          <AdminPanel />
         )}
       </main>
 
-      {/* Cart Drawer */}
+      {/* Floating Role Switcher Pill & Modal */}
+      <RoleSwitcher />
+
+      {/* Customer Cart Drawer */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
-        onOrderPlaced={() => setCurrentView('track')}
+        onOrderPlaced={() => {}}
       />
 
-      {/* Customer Auth / Logout Modal */}
+      {/* Customer Profile & Logout Modal */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
 
-      {/* Mobile Bottom Navigation */}
-      <BottomNav
-        currentView={currentView}
-        setCurrentView={setCurrentView}
-      />
+      {/* Mobile Bottom Navigation tailored to Role */}
+      <BottomNav />
 
       {/* Toast Notification */}
       {toastMsg && (

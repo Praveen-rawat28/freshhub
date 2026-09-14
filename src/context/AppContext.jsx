@@ -2,6 +2,50 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
+export const ROLE_PROFILES = {
+  customer: {
+    role: 'customer',
+    name: 'Praveen Rawat',
+    phone: '+91 98990 12345',
+    email: 'praveen.rawat@freshhub.in',
+    address: 'Tower B, Flat 1204, Central Park · Sector 43, Gurugram',
+    title: 'Verified Customer',
+    badge: '🛍️ Customer',
+    avatar: 'PR'
+  },
+  rider: {
+    role: 'rider',
+    name: 'Sahil Kumar',
+    phone: '+91 98765 43210',
+    email: 'sahil.delivery@freshhub.in',
+    vehicle: 'Ather 450X (EV Scooter)',
+    vehicleType: 'EV Scooter',
+    hub: 'WH-2 · Sector 57 Gurugram',
+    title: 'Delivery Partner',
+    badge: '🛵 Rider',
+    avatar: 'SK'
+  },
+  staff: {
+    role: 'staff',
+    name: 'Neha Verma',
+    phone: '+91 98333 44556',
+    email: 'neha.ops@freshhub.in',
+    station: 'WH-2 Dark Store · Cold Room Station 4',
+    title: 'Warehouse Lead / Picker',
+    badge: '🏭 Staff',
+    avatar: 'NV'
+  },
+  admin: {
+    role: 'admin',
+    name: 'Vansh Bhati',
+    phone: '+91 98111 99999',
+    email: 'vansh.admin@freshhub.in',
+    title: 'Operations Director',
+    badge: '👑 Admin',
+    avatar: 'VB'
+  }
+};
+
 export const INITIAL_PRODUCTS = [
   {
     id: 'tomato-hybrid',
@@ -14,6 +58,7 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-TM-092 · Grade A',
     origin: 'Nashik Farm',
     shelfLife: '3 Days',
+    stockKg: 480,
     rating: 4.8
   },
   {
@@ -27,6 +72,7 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-SP-114 · Hydroponic',
     origin: 'Sonipat Hub',
     shelfLife: '2 Days',
+    stockKg: 120,
     rating: 4.9
   },
   {
@@ -40,6 +86,7 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-ON-884 · Cured',
     origin: 'Lasalgaon Mandi',
     shelfLife: '14 Days',
+    stockKg: 650,
     rating: 4.7
   },
   {
@@ -53,6 +100,7 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-MG-412 · GI Tagged',
     origin: 'Ratnagiri Orchards',
     shelfLife: '4 Days',
+    stockKg: 210,
     rating: 5.0
   },
   {
@@ -66,6 +114,7 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-CUT-009 · Clean Room',
     origin: 'WH-2 Fresh Kitchen',
     shelfLife: '36 Hours',
+    stockKg: 85,
     rating: 4.8
   },
   {
@@ -79,6 +128,7 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-CUT-012 · Chilled 4°C',
     origin: 'WH-2 Fresh Kitchen',
     shelfLife: '48 Hours',
+    stockKg: 95,
     rating: 4.9
   },
   {
@@ -92,11 +142,12 @@ export const INITIAL_PRODUCTS = [
     batch: 'BAT-BK-701 · Baked 5 AM',
     origin: 'Artisan Bakehouse',
     shelfLife: '3 Days',
+    stockKg: 40,
     rating: 4.9
   }
 ];
 
-const INITIAL_RIDERS = [
+export const INITIAL_RIDERS = [
   {
     id: 'rider-sahil',
     name: 'Sahil Kumar',
@@ -133,10 +184,10 @@ const INITIAL_RIDERS = [
   }
 ];
 
-const INITIAL_ORDERS = [
+export const INITIAL_ORDERS = [
   {
     id: 'FH-88231',
-    customer: 'You (demo customer)',
+    customer: 'Praveen Rawat',
     addr: 'Tower B, Flat 1204, Central Park · Sector 43, Gurugram',
     phone: '+91 98990 12345',
     channel: 'D2C',
@@ -153,8 +204,8 @@ const INITIAL_ORDERS = [
       { id: 'spinach-fresh', name: 'Farm Spinach Bunch', pack: '2 bunches', qty: 1, price: 36 }
     ],
     events: [
-      { at: '12:04 PM', msg: 'Order confirmed & assigned to WH-2 dark store' },
-      { at: '12:15 PM', msg: 'Packed into chilled crates' },
+      { at: '12:04 PM', msg: 'Order placed by customer · Dark store allocated' },
+      { at: '12:15 PM', msg: 'Packed into chilled crates by Neha Verma (WH-2)' },
       { at: '12:22 PM', msg: 'Handed over to Sahil Kumar · In Transit' }
     ]
   },
@@ -168,25 +219,37 @@ const INITIAL_ORDERS = [
     slot: 'Express 90 min',
     placedAt: '12:35 PM',
     payMode: 'UPI',
-    state: 'NEW',
+    state: 'READY_FOR_PICKUP',
     crates: 1,
     lines: [
       { id: 'mango-alphonso', name: 'Ratnagiri Alphonso Mango', pack: '3 pc', qty: 1, price: 246 }
     ],
     events: [
-      { at: '12:35 PM', msg: 'Order received at WH-2 · Waiting for rider assignment' }
+      { at: '12:35 PM', msg: 'Order received at WH-2' },
+      { at: '12:42 PM', msg: 'Packed into Crate #CR-44 · Waiting for rider pickup' }
+    ]
+  },
+  {
+    id: 'FH-88238',
+    customer: 'Amit Khurana',
+    addr: 'DLF Phase 4, Block B, Gurugram',
+    phone: '+91 98777 66554',
+    channel: 'D2C',
+    wh: 'WH-1',
+    slot: 'Evening 6-8 PM',
+    placedAt: '01:10 PM',
+    payMode: 'Card',
+    state: 'NEW',
+    crates: 1,
+    lines: [
+      { id: 'artisan-bread', name: 'Whole Wheat Sourdough Loaf', pack: '400 g', qty: 1, price: 75 },
+      { id: 'mixveg-prep', name: 'Stir Fry Cut Vegetable Mix', pack: '400 g', qty: 1, price: 68 }
+    ],
+    events: [
+      { at: '01:10 PM', msg: 'Order placed · Awaiting warehouse packing' }
     ]
   }
 ];
-
-const DEFAULT_USER = {
-  id: 'user-praveen',
-  name: 'Praveen Rawat',
-  phone: '+91 98990 12345',
-  email: 'praveen.rawat@freshhub.in',
-  address: 'Tower B, Flat 1204, Central Park · Sector 43, Gurugram',
-  avatar: 'PR'
-};
 
 export function AppProvider({ children }) {
   // Theme: 'dark' | 'light'
@@ -194,35 +257,20 @@ export function AppProvider({ children }) {
     return localStorage.getItem('freshhub_theme') || 'dark';
   });
 
-  // Customer User Auth
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('freshhub_user');
-    if (saved === 'null') return null;
-    return saved ? JSON.parse(saved) : DEFAULT_USER;
+  // Current Role: 'customer' | 'rider' | 'staff' | 'admin'
+  const [currentRole, setCurrentRole] = useState(() => {
+    return localStorage.getItem('freshhub_active_role') || 'customer';
   });
 
+  // Role Profile
+  const [userProfile, setUserProfile] = useState(() => {
+    const savedRole = localStorage.getItem('freshhub_active_role') || 'customer';
+    return ROLE_PROFILES[savedRole] || ROLE_PROFILES.customer;
+  });
+
+  const [isRoleSwitcherOpen, setIsRoleSwitcherOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
-  // Apply theme to document root
-  useEffect(() => {
-    localStorage.setItem('freshhub_theme', theme);
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
-  const loginUser = (userData) => {
-    setUser(userData);
-    localStorage.setItem('freshhub_user', JSON.stringify(userData));
-    setIsAuthModalOpen(false);
-  };
-
-  const logoutUser = () => {
-    setUser(null);
-    localStorage.setItem('freshhub_user', 'null');
-  };
+  const [toastMsg, setToastMsg] = useState(null);
 
   // Products
   const [products] = useState(() => {
@@ -248,7 +296,7 @@ export function AppProvider({ children }) {
     return saved ? JSON.parse(saved) : INITIAL_RIDERS;
   });
 
-  // Active Logged-in Rider
+  // Active Rider profile when role === 'rider'
   const [activeRider, setActiveRider] = useState(() => {
     const saved = localStorage.getItem('freshhub_active_rider');
     return saved ? JSON.parse(saved) : INITIAL_RIDERS[0];
@@ -260,10 +308,18 @@ export function AppProvider({ children }) {
     return saved === null || saved === 'true';
   });
 
-  // Toast
-  const [toastMsg, setToastMsg] = useState(null);
+  // Apply theme to document root
+  useEffect(() => {
+    localStorage.setItem('freshhub_theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   // Sync to localStorage
+  useEffect(() => {
+    localStorage.setItem('freshhub_active_role', currentRole);
+    setUserProfile(ROLE_PROFILES[currentRole] || ROLE_PROFILES.customer);
+  }, [currentRole]);
+
   useEffect(() => {
     localStorage.setItem('freshhub_cart', JSON.stringify(cart));
   }, [cart]);
@@ -279,8 +335,6 @@ export function AppProvider({ children }) {
   useEffect(() => {
     if (activeRider) {
       localStorage.setItem('freshhub_active_rider', JSON.stringify(activeRider));
-    } else {
-      localStorage.removeItem('freshhub_active_rider');
     }
   }, [activeRider]);
 
@@ -290,7 +344,20 @@ export function AppProvider({ children }) {
 
   const showToast = (msg) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3000);
+    setTimeout(() => setToastMsg(null), 3200);
+  };
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  // Switch Role
+  const switchRole = (newRole) => {
+    setCurrentRole(newRole);
+    const profile = ROLE_PROFILES[newRole] || ROLE_PROFILES.customer;
+    setUserProfile(profile);
+    setIsRoleSwitcherOpen(false);
+    showToast(`Switched to ${profile.badge} Panel`);
   };
 
   // Cart Helpers
@@ -323,7 +390,7 @@ export function AppProvider({ children }) {
 
   const clearCart = () => setCart([]);
 
-  // Checkout / Place Order
+  // Customer: Place Order
   const placeOrder = (slot = 'Express 90 min') => {
     if (cart.length === 0) return null;
 
@@ -332,9 +399,9 @@ export function AppProvider({ children }) {
 
     const newOrder = {
       id: newId,
-      customer: 'You (demo customer)',
-      addr: 'Tower B, Flat 1204, Central Park · Sector 43, Gurugram',
-      phone: '+91 98990 12345',
+      customer: userProfile.name || 'Customer',
+      addr: userProfile.address || 'Tower B, Flat 1204, Central Park · Sector 43, Gurugram',
+      phone: userProfile.phone || '+91 98990 12345',
       channel: 'D2C',
       wh: 'WH-2',
       slot,
@@ -344,7 +411,7 @@ export function AppProvider({ children }) {
       crates: Math.max(1, Math.ceil(cart.length / 2)),
       lines: [...cart],
       events: [
-        { at: timeNow, msg: 'Order placed · Allocated to Sector 57 WH-2 dark store' }
+        { at: timeNow, msg: 'Order placed by customer · Dark store packing allocated' }
       ]
     };
 
@@ -354,7 +421,28 @@ export function AppProvider({ children }) {
     return newOrder;
   };
 
-  // Rider Actions
+  // Staff: Pack Order
+  const packOrderAsStaff = (orderId) => {
+    const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id === orderId) {
+          return {
+            ...ord,
+            state: 'READY_FOR_PICKUP',
+            events: [
+              ...ord.events,
+              { at: timeNow, msg: `Packed into chilled crate(s) by ${userProfile.name} (Warehouse Staff)` }
+            ]
+          };
+        }
+        return ord;
+      })
+    );
+    showToast(`Order ${orderId} packed and staged for rider pickup!`);
+  };
+
+  // Rider: Accept Order
   const acceptOrderAsRider = (orderId) => {
     if (!activeRider) return;
     const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -376,12 +464,12 @@ export function AppProvider({ children }) {
         return ord;
       })
     );
-    showToast(`Order ${orderId} accepted! Proceed to warehouse for pickup.`);
+    showToast(`Order ${orderId} assigned to you! Proceed to dark store.`);
   };
 
+  // Rider: Pickup from Dark store
   const pickupOrderAsRider = (orderId) => {
     const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
     setOrders((prev) =>
       prev.map((ord) => {
         if (ord.id === orderId) {
@@ -390,7 +478,7 @@ export function AppProvider({ children }) {
             state: 'OUT_FOR_DELIVERY',
             events: [
               ...ord.events,
-              { at: timeNow, msg: `Crates checked out of dark store. Out for delivery.` }
+              { at: timeNow, msg: `Crates verified and picked up from warehouse. Out for delivery.` }
             ]
           };
         }
@@ -400,6 +488,7 @@ export function AppProvider({ children }) {
     showToast(`Order ${orderId} picked up! Now Out for Delivery.`);
   };
 
+  // Rider: Complete Delivery
   const completeOrderAsRider = (orderId) => {
     if (!activeRider) return;
     const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -427,7 +516,6 @@ export function AppProvider({ children }) {
       })
     );
 
-    // Update active rider metrics
     const updatedRider = {
       ...activeRider,
       todayDeliveries: activeRider.todayDeliveries + 1,
@@ -442,40 +530,44 @@ export function AppProvider({ children }) {
       prev.map((r) => (r.id === updatedRider.id ? updatedRider : r))
     );
 
-    showToast(`Delivery completed! ₹${earnedAmount} added to your balance.`);
+    showToast(`Delivery completed! ₹${earnedAmount} credited to your wallet.`);
   };
 
-  // Register New Rider
-  const registerRider = (riderData) => {
-    const initials = riderData.name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2) || 'RP';
-
-    const newRider = {
-      id: `rider-${Date.now()}`,
-      ...riderData,
-      rating: 5.0,
-      totalDeliveries: 0,
-      todayDeliveries: 0,
-      todayEarnings: 0,
-      lifetimeEarnings: 0,
-      balance: 100, // Joining bonus
-      avatar: initials
-    };
-
-    setRiders((prev) => [newRider, ...prev]);
-    setActiveRider(newRider);
-    setIsRiderOnline(true);
-    showToast(`Welcome ${newRider.name}! ₹100 joining bonus credited.`);
+  // Admin: Cancel / Override Order
+  const cancelOrderAsAdmin = (orderId) => {
+    const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id === orderId) {
+          return {
+            ...ord,
+            state: 'CANCELLED',
+            events: [
+              ...ord.events,
+              { at: timeNow, msg: `Cancelled by Administrator (${userProfile.name})` }
+            ]
+          };
+        }
+        return ord;
+      })
+    );
+    showToast(`Order ${orderId} cancelled by Admin`);
   };
 
+  // Reset demo data
+  const resetDemoData = () => {
+    setOrders(INITIAL_ORDERS);
+    setRiders(INITIAL_RIDERS);
+    setActiveRider(INITIAL_RIDERS[0]);
+    localStorage.setItem('orders', JSON.stringify(INITIAL_ORDERS));
+    localStorage.setItem('freshhub_riders', JSON.stringify(INITIAL_RIDERS));
+    showToast('Demo data restored to initial state');
+  };
+
+  // Rider Cashout
   const cashoutRiderBalance = () => {
     if (!activeRider || activeRider.balance <= 0) return;
     const cashed = activeRider.balance;
-
     const updated = { ...activeRider, balance: 0 };
     setActiveRider(updated);
     setRiders((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
@@ -485,6 +577,15 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
+        theme,
+        toggleTheme,
+        currentRole,
+        switchRole,
+        userProfile,
+        isRoleSwitcherOpen,
+        setIsRoleSwitcherOpen,
+        isAuthModalOpen,
+        setIsAuthModalOpen,
         products,
         cart,
         addToCart,
@@ -492,6 +593,7 @@ export function AppProvider({ children }) {
         clearCart,
         orders,
         placeOrder,
+        packOrderAsStaff,
         riders,
         activeRider,
         setActiveRider,
@@ -500,15 +602,9 @@ export function AppProvider({ children }) {
         acceptOrderAsRider,
         pickupOrderAsRider,
         completeOrderAsRider,
-        registerRider,
+        cancelOrderAsAdmin,
+        resetDemoData,
         cashoutRiderBalance,
-        theme,
-        toggleTheme,
-        user,
-        loginUser,
-        logoutUser,
-        isAuthModalOpen,
-        setIsAuthModalOpen,
         toastMsg,
         showToast
       }}

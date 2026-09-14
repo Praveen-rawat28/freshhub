@@ -809,8 +809,443 @@
   margin-bottom: 12px;
 }
 
+/* ==========================================================================
+   GLOBAL MULTI-PANEL SWITCHER BAR
+   ========================================================================== */
+.freshhub-global-panel-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 7px 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.panel-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+  gap: 12px;
+}
+
+.panel-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  color: #10b981;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.panel-brand-icon {
+  font-size: 16px;
+}
+
+.panel-bar-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.panel-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panel-nav-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.panel-nav-btn.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+/* ==========================================================================
+   DEDICATED FULLSCREEN RIDER APP SCREEN (#/rider)
+   ========================================================================== */
+.rider-fullscreen-container {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: #090e1a;
+  overflow-y: auto;
+  padding-top: 50px;
+  padding-bottom: 40px;
+  color: #f8fafc;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.rider-fullscreen-container.open {
+  display: block;
+  animation: riderFadeIn 0.25s ease-out;
+}
+
+.rider-select-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rider-select-card:hover {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.rider-badge-select {
+  font-size: 11px;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+/* Incoming Order Alert ("Ye order aaya hai") */
+.rider-incoming-alert-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(16, 185, 129, 0.08));
+  border: 2px solid #f59e0b;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+  animation: alertGlow 2s infinite alternate;
+  margin-bottom: 20px;
+}
+
+@keyframes alertGlow {
+  0% { box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15); }
+  100% { box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4); }
+}
+
+@keyframes ringBell {
+  0%, 100% { transform: rotate(0deg); }
+  20%, 60% { transform: rotate(15deg); }
+  40%, 80% { transform: rotate(-15deg); }
+}
+
+/* Active In-Transit Card ("Yaha jana hai") */
+.rider-active-delivery-card {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.15);
+  margin-bottom: 20px;
+}
+
+.delivery-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.delivery-pulsing-badge {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: riderPulse 1.8s infinite;
+}
+
+.delivery-route-box {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.delivery-route-box::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 32px;
+  bottom: 32px;
+  width: 2px;
+  background: repeating-linear-gradient(to bottom, #3b82f6, #3b82f6 4px, transparent 4px, transparent 8px);
+}
+
+.route-point {
+  padding-left: 28px;
+  position: relative;
+}
+
+.route-point::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #0f172a;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+.route-point.drop::before {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.point-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 3px;
+}
+
+.point-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.point-address {
+  font-size: 13px;
+  color: #e2e8f0;
+  line-height: 1.4;
+}
+
+.point-desc {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   ADMIN FLEET ROSTER SECTION (Injected into Admin Ops Console)
+   ========================================================================== */
+.admin-fleet-box {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 24px;
+  margin-top: 28px;
+  margin-bottom: 30px;
+}
+
+.admin-fleet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn-open-rider-app {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  transition: all 0.2s;
+}
+
+.btn-open-rider-app:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
+}
+
+.admin-fleet-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.fleet-stat-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.fleet-stat-card.available {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.fleet-stat-card.busy {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 3px;
+}
+
+.admin-fleet-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.admin-fleet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.admin-fleet-table th {
+  background: rgba(15, 23, 42, 0.9);
+  padding: 12px 16px;
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-fleet-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+}
+
+.admin-fleet-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rider-table-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-pill.status-available {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-pill.status-ondelivery {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.btn-table-action {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-table-action:hover {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
+  .freshhub-global-panel-bar {
+    padding: 6px 10px;
+  }
+  .panel-bar-brand {
+    display: none;
+  }
+  .panel-bar-links {
+    width: 100%;
+    justify-content: space-around;
+  }
+  .panel-nav-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
   .rider-top-nav {
     padding: 12px 16px;
   }

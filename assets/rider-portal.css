@@ -1,0 +1,835 @@
+/* FreshHub Rider Delivery Partner Portal Styles */
+
+:root {
+  --rider-primary: #10b981;
+  --rider-primary-dark: #059669;
+  --rider-primary-light: #ecfdf5;
+  --rider-accent: #f59e0b;
+  --rider-accent-light: #fffbeb;
+  --rider-bg: #0f172a;
+  --rider-card-bg: rgba(30, 41, 59, 0.95);
+  --rider-card-border: rgba(255, 255, 255, 0.08);
+  --rider-text: #f8fafc;
+  --rider-text-muted: #94a3b8;
+  --rider-success: #10b981;
+  --rider-warning: #f59e0b;
+  --rider-danger: #ef4444;
+  --rider-info: #3b82f6;
+  --rider-radius: 14px;
+}
+
+/* Floating Switcher Pill */
+.rider-quick-toggle-pill {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -3px rgba(16, 185, 129, 0.45), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+}
+
+.rider-quick-toggle-pill:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 14px 30px -4px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+}
+
+.rider-quick-toggle-pill .pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  animation: riderPulse 1.8s infinite;
+}
+
+@keyframes riderPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+/* Modal / Full View Container */
+#rider-portal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow-y: auto;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: var(--rider-text);
+  padding: 16px;
+}
+
+#rider-portal-overlay.open {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  animation: riderFadeIn 0.25s ease-out;
+}
+
+@keyframes riderFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.rider-app-window {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto 40px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.rider-top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(30, 41, 59, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.rider-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rider-brand-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-size: 18px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.rider-brand-title {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.rider-brand-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rider-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rider-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.rider-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* Tabs Bar */
+.rider-sub-nav {
+  display: flex;
+  gap: 4px;
+  padding: 10px 24px;
+  background: #131d33;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+}
+
+.rider-tab-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.rider-tab-btn.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.rider-tab-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+}
+
+/* Content Area */
+.rider-body {
+  padding: 24px;
+  min-height: 480px;
+}
+
+/* Auth Cards */
+.rider-auth-card {
+  max-width: 480px;
+  margin: 20px auto;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 28px;
+  backdrop-filter: blur(10px);
+}
+
+.rider-auth-card h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.rider-auth-card p.desc {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.rider-form-group {
+  margin-bottom: 16px;
+}
+
+.rider-form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+
+.rider-input, .rider-select {
+  width: 100%;
+  padding: 12px 14px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.rider-input:focus, .rider-select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.rider-btn-primary {
+  width: 100%;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rider-btn-primary:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.rider-demo-presets {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.rider-demo-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.rider-preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rider-preset-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.rider-preset-chip:hover {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Duty Toggle Card */
+.rider-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.rider-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.rider-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.rider-name-group h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.rider-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.vehicle-tag {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.duty-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.duty-switch-btn {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.duty-switch-btn.online {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+.duty-switch-btn.offline {
+  background: #475569;
+  color: #cbd5e1;
+}
+
+/* KPI Grid */
+.rider-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.rider-kpi-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.rider-kpi-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #10b981;
+}
+
+.rider-kpi-card.accent::after {
+  background: #f59e0b;
+}
+
+.rider-kpi-card.info::after {
+  background: #3b82f6;
+}
+
+.rider-kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.rider-kpi-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.rider-kpi-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Delivery Orders Section */
+.rider-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.rider-section-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rider-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rider-order-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rider-order-card.active-order {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.05);
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.15);
+}
+
+.rider-order-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.order-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.order-id-badge {
+  font-size: 14px;
+  font-weight: 800;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-channel-tag {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.order-payout-estimate {
+  text-align: right;
+}
+
+.payout-amount {
+  font-size: 18px;
+  font-weight: 800;
+  color: #f59e0b;
+}
+
+.payout-tag {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.order-waypoints {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 10px;
+  border-left: 2px dashed rgba(255, 255, 255, 0.15);
+  margin-left: 6px;
+}
+
+.waypoint {
+  position: relative;
+}
+
+.waypoint::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #64748b;
+  border: 2px solid #0f172a;
+}
+
+.waypoint.pickup::before {
+  background: #3b82f6;
+}
+
+.waypoint.drop::before {
+  background: #10b981;
+}
+
+.waypoint-type {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.waypoint-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.waypoint-meta {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.order-items-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-delivery-action {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-accept {
+  background: #10b981;
+  color: white;
+}
+
+.btn-accept:hover {
+  background: #059669;
+}
+
+.btn-pickup {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-pickup:hover {
+  background: #2563eb;
+}
+
+.btn-navigate {
+  background: #6366f1;
+  color: white;
+}
+
+.btn-navigate:hover {
+  background: #4f46e5;
+}
+
+.btn-complete {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-complete:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+/* Earnings Ledger Table */
+.rider-ledger-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.rider-ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.rider-ledger-table th {
+  background: rgba(15, 23, 42, 0.8);
+  padding: 12px 16px;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rider-ledger-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+}
+
+.rider-ledger-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.status-badge-paid {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-badge-pending {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+/* Cashout Banner */
+.cashout-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.1));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.cashout-info h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.cashout-info p {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.btn-cashout {
+  padding: 10px 20px;
+  background: #10b981;
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  font-size: 13px;
+}
+
+.btn-cashout:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+/* Toast Notifications */
+.rider-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #059669;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100001;
+  pointer-events: none;
+}
+
+.rider-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Empty State */
+.rider-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #94a3b8;
+}
+
+.rider-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .rider-top-nav {
+    padding: 12px 16px;
+  }
+  .rider-body {
+    padding: 16px;
+  }
+  .order-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .order-payout-estimate {
+    text-align: left;
+  }
+  .cashout-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .btn-cashout {
+    width: 100%;
+  }
+}
